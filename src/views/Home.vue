@@ -10,9 +10,11 @@
       <!-- {{ analyzedData }} -->
       <hr />
       <ul v-if="typeCount" class="list">
-        <li v-for="(val, type, i) in typeCount" :key="type+i" :class="{bold: val.count > 0}">
-          {{type}}: {{val.count}}
-        </li>
+        <template v-for="(val, type, i) in typeCount">
+          <li :key="type+i" v-if="val.count > 0">
+            <strong :style="{color: val.color}">{{type}}</strong>: {{val.count}}
+          </li>
+        </template>
       </ul>
     </div>
   </div>
@@ -35,24 +37,24 @@ export default {
       data: '',
       analyzedData: [],
       typeList: [
-        'normal',
-        'grass',
-        'fire',
-        'water',
-        'electric',
-        'bug',
-        'flying',
-        'fighting',
-        'ground',
-        'rock',
-        'steel',
-        'poison',
-        'psychic',
-        'ghost',
-        'dark',
-        'ice',
-        'dragon',
-        'fairy',
+        ['normal', '#A8A878'],
+        ['grass', '#78C850'],
+        ['fire', '#F08030'],
+        ['water', '#6890F0'],
+        ['electric', '#F8D030'],
+        ['bug', '#A8B820'],
+        ['flying', '#A890F0'],
+        ['fighting', '#C03028'],
+        ['ground', '#E0C068'],
+        ['rock', '#B8A038'],
+        ['steel', '#B8B8D0'],
+        ['poison', '#A040A0'],
+        ['psychic', '#F85888'],
+        ['ghost', '#705898'],
+        ['dark', '#705848'],
+        ['ice', '#98D8D8'],
+        ['dragon', '#7038F8'],
+        ['fairy', '#EE99AC'],
       ],
       typeCount: null,
     };
@@ -86,18 +88,19 @@ export default {
     resetTypeCount() {
       this.typeCount = this.typeList.reduce((res, curr) => {
         const data = {
-          name: curr,
+          name: curr[0],
           count: 0,
-          color: '#000000',
+          color: curr[1],
         };
-        return { ...res, [curr]: data };
+        return { ...res, [curr[0]]: data };
       }, {});
     },
     typeCountIncrement(typeName) {
       if (typeName === '' || typeName === undefined || typeName === null) return;
 
-      if (typeName && this.typeCount[typeName] >= 0) this.typeCount[typeName].count += 1;
-      else {
+      if (typeName && this.typeCount[typeName].count >= 0) {
+        this.typeCount[typeName].count += 1;
+      } else {
         this.typeCount[typeName] = {
           name: typeName,
           count: 1,
