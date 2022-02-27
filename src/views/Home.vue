@@ -12,7 +12,9 @@
       <ul v-if="typeCount" class="list">
         <template v-for="(val, type, i) in typeCount">
           <li :key="type+i" v-if="val.count > 0">
-            <strong :style="{color: val.color}">{{type}}</strong>: {{val.count}}
+            <strong :style="{color: val.color}">{{type}}</strong>
+            : {{val.count}}
+            ({{percentage(val.count)}}%)
           </li>
         </template>
       </ul>
@@ -98,7 +100,7 @@ export default {
     typeCountIncrement(typeName) {
       if (typeName === '' || typeName === undefined || typeName === null) return;
 
-      if (typeName && this.typeCount[typeName].count >= 0) {
+      if (typeName && this.typeCount[typeName] && this.typeCount[typeName].count >= 0) {
         this.typeCount[typeName].count += 1;
       } else {
         this.typeCount[typeName] = {
@@ -107,6 +109,12 @@ export default {
           color: '#000000',
         };
       }
+    },
+    percentage(count) {
+      return ((count / this.analyzedData.length) * 100).toLocaleString('en-us', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     },
   },
 };
